@@ -36,7 +36,11 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 LOCAL_APPS = [
-    # "apps.auth_user.apps.AuthUserConfig",
+    "apps.auth_user.apps.AuthUserConfig",
+    "apps.base.apps.BaseConfig",
+    "apps.core.apps.CoreConfig",
+    "apps.telegram_bot.apps.TelegramBotConfig",
+    "apps.amg.apps.AmgConfig",
 ]
 
 THIRD_PARTY_APPS = [
