@@ -2,21 +2,16 @@ from apps.telegram_bot.management.services.check_user_mode import user_mode
 from lang.lang_config import translate
 
 
-def amg_command(context):
+def activate_message(chat_id):
     from apps.telegram_bot.views import TelegramWebhookView
-    amg_message = translate('amg_command', context.get('chat_id', ''))
-    amg_escaped = TelegramWebhookView.escape(amg_message)
-    check_user_mode = user_mode(context.get('chat_id', ''))
+    check_user_mode = user_mode(chat_id)
     if check_user_mode == "Inactivate":
-        activate_mode = "🔓 Activate"
-    else:
         activate_mode = "🔒 Inactivate"
+        button_message = translate("Activate_message",chat_id)
 
-    TelegramWebhookView.send_message(
-                context["chat_id"],
-                f"*{amg_escaped}*",
-                parse_mode="MarkdownV2"
-        )
+    else:
+        activate_mode = "🔓 Activate"
+        button_message = translate("Inactivate_message",chat_id)
     
     buttons = [
         [
@@ -32,13 +27,10 @@ def amg_command(context):
         ]
     ]
 
-    button_message = translate("buttons_message",context.get('chat_id', ''))
     button_mss = TelegramWebhookView.escape(button_message)
     TelegramWebhookView.send_inline_keyboard(
-        chat_id=context["chat_id"],
+        chat_id=chat_id,
         text=f"*{button_mss}*",
         buttons=buttons,
         parse_mode="MarkdownV2"
 )
-    
-

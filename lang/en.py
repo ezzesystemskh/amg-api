@@ -37,5 +37,26 @@ Press "Inactivate" to return to Testing Mode
 
 ❗ Please be responsible. Misuse of this system in Serious Mode may result in penalties.
 """,
-    "buttons_message": "Emergency Features"
+    "buttons_message": "Emergency Features",
+    "Activate_message": """ 
+🔓 Serious Mode Activated. You are now in REAL emergency mode.
+
+☎️ All reports you send WILL be forwarded to emergency services.
+❗ Do NOT use this mode for testing or jokes.
+
+🆘 Misuse may result in being banned or facing legal action. 
+Please proceed only if you are experiencing a real emergency.
+""",
+    "Inactivate_message": """
+🔒 Testing Mode Activated. You are now in practice mode.
+
+🛠️ You can safely test all features of the system.
+📵 No real reports will be sent to emergency services.
+
+⚠️ Remember to Activate Serious Mode when you are in a real emergency.
+""",
+    "fire_command": """🔥 Fire emergency, Please send your location so the fire team can reach you quickly.""",
+    "police_command": """👮 Police emergency, Please send your location so the police can reach you quickly.""",
+    "ambulance_command": """🚑 Ambulance emergency, Please send your location so the ambulance can reach you quickly.""",
+    "other_command": """🆘 Comming Soon""",
 }

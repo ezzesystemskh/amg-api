@@ -41,6 +41,7 @@ LOCAL_APPS = [
     "apps.core.apps.CoreConfig",
     "apps.telegram_bot.apps.TelegramBotConfig",
     "apps.amg.apps.AmgConfig",
+    "apps.emergency.apps.EmergencyConfig",
 ]
 
 THIRD_PARTY_APPS = [

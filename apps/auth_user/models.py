@@ -12,7 +12,7 @@ STATUS = (
     ("active", "Active"),
     ("pending", "Pending"),
 )
-
+    
 
 class UserManager(BaseUserManager):
     def create_user(self, username, password, **extra_fields):
@@ -87,6 +87,7 @@ class UserProfile(AbstractModel):
     email = models.EmailField(max_length=200, null=True, blank=True)
     status = models.CharField(max_length=55, choices=STATUS, default="active")
     language = models.CharField(max_length=55, null=True, blank=True, default="en")
+    user_mode = models.CharField(max_length=50, default="Inactivate")
 
     class Meta:
         db_table = "user_profile"

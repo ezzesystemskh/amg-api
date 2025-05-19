@@ -13,6 +13,7 @@ from apps.telegram_bot.management.commands.language import (
     handle_language_selection,
     language_command,
 )
+from apps.telegram_bot.management.commands.other import other_command
 from apps.telegram_bot.management.commands.police import police_command
 from apps.telegram_bot.management.commands.share_contact import (
     handle_share_contact,
@@ -20,6 +21,8 @@ from apps.telegram_bot.management.commands.share_contact import (
 )
 from apps.telegram_bot.management.commands.start import start_command
 from telegram.helpers import escape_markdown
+
+from apps.telegram_bot.management.services.activate_user import activate_function
 
 
 class TelegramWebhookView(View):
@@ -57,8 +60,36 @@ class TelegramWebhookView(View):
 
     def handle_update(self, update):
         if "message" in update:
-            message = update["message"]
-            self.handle_message(message)
+            self.handle_message(update["message"])
+        elif "callback_query" in update:
+            self.handle_callback_query(update["callback_query"])
+
+    def handle_callback_query(self, callback_query):
+        chat_id = callback_query["message"]["chat"]["id"]
+        data = callback_query["data"]
+
+        print("User clicked:", data)
+
+        if data == "🔓 Activate":
+            activate_function(chat_id,data)
+
+        elif data == "🔒 Inactivate":
+            activate_function(chat_id,data)
+
+        elif data == "fire_help":
+            fire_command(chat_id)
+        
+        elif data == "police_help":
+            police_command(chat_id)
+
+        elif data == "ambulance_help":
+            ambulance_command(chat_id)
+
+        elif data == "other_help":
+            other_command(chat_id)
+
+        else:
+            self.send_message(chat_id, f"Wrong Buttons")
 
     def handle_message(self, message):
         user = message.get("from", {})
@@ -88,10 +119,6 @@ class TelegramWebhookView(View):
         elif "contact" in message:
             contact = message["contact"]
             handle_share_contact(context, contact)
-
-        else:
-            self.send_message(message["chat"]["id"], f"Unknown Command")
-
         
     def handle_command(self, context, command):
         print("This is command:",command)

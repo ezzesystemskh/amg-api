@@ -1,9 +1,9 @@
 from lang.lang_config import translate
 
-def ambulance_command(chat_id):
+def other_command(chat_id):
     from apps.telegram_bot.views import TelegramWebhookView
 
-    fire_message = translate('ambulance_command', chat_id)
+    fire_message = translate('other_command', chat_id)
     escaped_fire = TelegramWebhookView.escape(fire_message)
     TelegramWebhookView.send_message(
     chat_id,
