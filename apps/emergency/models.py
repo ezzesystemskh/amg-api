@@ -38,7 +38,7 @@ class EmergencyStep(AbstractModel):
         choices=EMERGENCY_STEP,
         max_length=55,
     )
-    emegency_type = models.ForeignKey(
+    emergency_type = models.ForeignKey(
         EmergencyType,
         on_delete=models.DO_NOTHING,
         related_name="emergency_type_step",

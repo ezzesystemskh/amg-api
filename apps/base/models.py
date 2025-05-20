@@ -8,7 +8,7 @@ class BaseImageFileModel(AbstractModel):
     object_id = models.PositiveIntegerField(null=True, blank=True)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
     content_object = GenericForeignKey("content_type", "object_id")
-    file_url = models.ImageField(upload_to="storages/decoder")
+    file_url = models.ImageField(upload_to="storages/emergency")
     is_deleted = models.BooleanField(default=False)
     
     def __str__(self):

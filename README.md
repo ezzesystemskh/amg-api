@@ -98,3 +98,12 @@ python manage.py collectstatic
 # Clear static files
 python manage.py collectstatic --clear
 ```
+
+### Seeder Data
+```bash
+# Step 1 : Decoder TYpe
+python manage.py loaddata seeder/emergency_type.json
+
+# Step 2 : Decoder Step
+python manage.py loaddata seeder/emergency_step.json
+```

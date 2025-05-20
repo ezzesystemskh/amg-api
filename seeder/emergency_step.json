@@ -1,0 +1,110 @@
+[
+    {
+        "model": "emergency.EmergencyStep",
+        "pk": 1,
+        "fields": {
+            "name": "Please send your location",
+            "step_num": 1,
+            "is_completed": true,
+            "step_type": "location",
+            "is_default": true,
+            "emergency_type": 1
+        }
+    },
+    {
+        "model": "emergency.EmergencyStep",
+        "pk": 2,
+        "fields": {
+            "name": "Please send your photo",
+            "step_num": 2,
+            "is_completed": true,
+            "step_type": "photo_or_video",
+            "is_default": true,
+            "emergency_type": 1
+        }
+    },
+    {
+        "model": "emergency.EmergencyStep",
+        "pk": 3,
+        "fields": {
+            "name": "Please send your text",
+            "step_num": 3,
+            "is_completed": true,
+            "step_type": "text",
+            "is_default": true,
+            "emergency_type": 1
+        }
+    },
+    {
+        "model": "emergency.EmergencyStep",
+        "pk": 4,
+        "fields": {
+            "name": "Please send your location",
+            "step_num": 1,
+            "is_completed": true,
+            "step_type": "location",
+            "is_default": true,
+            "emergency_type": 2
+        }
+    },
+    {
+        "model": "emergency.EmergencyStep",
+        "pk": 5,
+        "fields": {
+            "name": "Please send your photo",
+            "step_num": 2,
+            "is_completed": true,
+            "step_type": "photo_or_video",
+            "is_default": true,
+            "emergency_type": 2
+        }
+    },
+    {
+        "model": "emergency.EmergencyStep",
+        "pk": 6,
+        "fields": {
+            "name": "Please send your text",
+            "step_num": 3,
+            "is_completed": true,
+            "step_type": "text",
+            "is_default": true,
+            "emergency_type": 2
+        }
+    },
+    {
+        "model": "emergency.EmergencyStep",
+        "pk": 7,
+        "fields": {
+            "name": "Please send your location",
+            "step_num": 1,
+            "is_completed": true,
+            "step_type": "location",
+            "is_default": true,
+            "emergency_type": 3
+        }
+    },
+    {
+        "model": "emergency.EmergencyStep",
+        "pk": 8,
+        "fields": {
+            "name": "Please send your photo",
+            "step_num": 2,
+            "is_completed": true,
+            "step_type": "photo_or_video",
+            "is_default": true,
+            "emergency_type": 3
+        }
+    },
+    {
+        "model": "emergency.EmergencyStep",
+        "pk": 9,
+        "fields": {
+            "name": "Please send your text",
+            "step_num": 3,
+            "is_completed": true,
+            "step_type": "text",
+            "is_default": true,
+            "emergency_type": 3
+        }
+    }
+]

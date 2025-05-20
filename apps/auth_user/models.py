@@ -7,6 +7,12 @@ from django.contrib.auth.models import (
 from apps.core.models import AbstractModel
 from django.db import models
 
+EMERGENCY_TYPE = (
+    ("police", "POLICE"),
+    ("ambulance", "AMBULANCE"),
+    ("fire", "FIRE"),
+)
+
 STATUS = (
     ("inactive", "Inactive"),
     ("active", "Active"),
@@ -88,6 +94,7 @@ class UserProfile(AbstractModel):
     status = models.CharField(max_length=55, choices=STATUS, default="active")
     language = models.CharField(max_length=55, null=True, blank=True, default="en")
     user_mode = models.CharField(max_length=50, default="Inactivate")
+    operation = models.CharField(choices=EMERGENCY_TYPE, max_length=55, null=True, blank=True)
 
     class Meta:
         db_table = "user_profile"

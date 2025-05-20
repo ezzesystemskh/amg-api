@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from apps.emergency.models import Emergency, EmergencyStep
-from apps.emergency.constants import EMERGENCY_STEP, EmergencyType
+from apps.emergency.constants import EMERGENCY_STEP
 
-class EmergencySerializer(serializers.ModelSerializer):
+class EmergencyStepSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmergencyStep
         fields = "__all__"
@@ -19,12 +19,12 @@ class EmergencySerializer(serializers.ModelSerializer):
             data["step_num"] = 1
 
     def validate(self, attrs):
-        self.validate_duplicate_step(attrs)
-        self.validate_default_step(attrs)
-        self.validate_default_completed_step(attrs)
+        self.validate_duplicate_emergency_step(attrs)
+        self.validate_default_emergency_step(attrs)
+        self.validate_default_completed_emergency_step(attrs)
         return super().validate(attrs)
     
-    def validate_default_step(self, attrs):
+    def validate_default_emergency_step(self, attrs):
         if attrs.get("is_default"):
             default_step = EmergencyStep.objects.filter(is_default=True)
             if self.instance:
@@ -35,7 +35,7 @@ class EmergencySerializer(serializers.ModelSerializer):
                     {"is_default": "This default step already exists."}
                 )
             
-    def validate_default_completed_step(self, attrs):
+    def validate_default_completed_emergency_step(self, attrs):
         if attrs.get("is_completed"):
             default_step = EmergencyStep.objects.filter(is_completed=True)
             if self.instance:
@@ -46,7 +46,7 @@ class EmergencySerializer(serializers.ModelSerializer):
                     {"is_default": "This completed step already exists."}
                 )
 
-    def validate_duplicate_step(self, attrs):
+    def validate_duplicate_emergency_step(self, attrs):
         step = EmergencyStep.objects.filter(
             step_num=attrs.get("step_num"),
         )
@@ -57,7 +57,7 @@ class EmergencySerializer(serializers.ModelSerializer):
         
 
 class EmergencySerializer(serializers.ModelSerializer):
-    emergency_type_name = serializers.CharField(source="emergency_type.name")
+    emergency_type_name = serializers.CharField(source="emergency_type.name", read_only=True)
 
     class Meta:
         model = Emergency

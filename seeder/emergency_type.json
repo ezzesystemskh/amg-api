@@ -1,0 +1,26 @@
+[
+    {
+        "model": "emergency.EmergencyType",
+        "pk": 1,
+        "fields": {
+            "name": "fire",
+            "is_active":true
+        }
+    },
+    {
+        "model": "emergency.EmergencyType",
+        "pk": 2,
+        "fields": {
+            "name": "police",
+            "is_active":true
+        }
+    },
+    {
+        "model": "emergency.EmergencyType",
+        "pk": 3,
+        "fields": {
+            "name": "ambulance",
+            "is_active":true
+        }
+    }
+]
