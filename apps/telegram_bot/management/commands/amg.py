@@ -9,8 +9,11 @@ def amg_command(context):
     check_user_mode = user_mode(context.get('chat_id', ''))
     if check_user_mode == "Inactivate":
         activate_mode = "🔓 Activate"
+        button_message = translate("inactive_buttons_message",context.get('chat_id', ''))
+
     else:
         activate_mode = "🔒 Inactivate"
+        button_message = translate("active_buttons_message",context.get('chat_id', ''))
 
     TelegramWebhookView.send_message(
                 context["chat_id"],
@@ -32,7 +35,6 @@ def amg_command(context):
         ]
     ]
 
-    button_message = translate("buttons_message",context.get('chat_id', ''))
     button_mss = TelegramWebhookView.escape(button_message)
     TelegramWebhookView.send_inline_keyboard(
         chat_id=context["chat_id"],

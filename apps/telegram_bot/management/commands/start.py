@@ -65,8 +65,8 @@ def start_command(context):
         return
 
     TelegramWebhookView.set_telegram_command(context)
-    # TelegramWebhookView.send_message(
-    #     context.get("chat_id"), f"{welcome} {fullname} {greeting}"
-    # )
+    TelegramWebhookView.send_message(
+        context.get("chat_id"), f"{welcome} {fullname} {greeting}"
+    )
     amg_command(context)
 

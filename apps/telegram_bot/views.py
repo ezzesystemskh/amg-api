@@ -1,4 +1,5 @@
 import json
+import os
 import re
 from django.http import HttpResponse, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
@@ -23,6 +24,7 @@ from apps.telegram_bot.management.commands.start import start_command
 from telegram.helpers import escape_markdown
 
 from apps.telegram_bot.management.services.activate_user import activate_function
+from apps.telegram_bot.management.services.handle_image import handle_photo_message
 
 
 class TelegramWebhookView(View):
@@ -106,7 +108,10 @@ class TelegramWebhookView(View):
             "fullname": f"{user.get('first_name', '')} {user.get('last_name', '')}",
             "photo_url": user_profile
         }
-
+        if "photo" in message:
+            print("Photo detected, handling photo...")
+            # handle_photo_message({"message": message}) 
+            return
 
         # Handle commands
         if text.startswith("/"):
@@ -134,16 +139,19 @@ class TelegramWebhookView(View):
         elif command == "/help":
             help_command(context)
 
-        elif command == "/Police":
-            police_command(context)
+        elif command == "/police":
+            police_command(context.get('chat_id'))
 
-        elif command == "/Ambulance":
-            ambulance_command(context)
+        elif command == "/ambulance":
+            ambulance_command(context.get('chat_id'))
 
-        elif command == "/Fire":
-            fire_command(context)
+        elif command == "/fire":
+            fire_command(context.get('chat_id'))
         
         elif command == "/emg":
+            amg_command(context) 
+
+        elif command == "/rule":
             amg_command(context)
 
         else:
@@ -171,9 +179,10 @@ class TelegramWebhookView(View):
         print(context["chat_id"])
 
         commands = [
-            {"command": "Fire", "description": translate("fire_command", context["chat_id"])},
-            {"command": "Ambulance", "description": translate("ambulance_command", context["chat_id"])},
-            {"command": "police", "description": translate("police_command", context["chat_id"])},
+            {"command": "fire", "description": translate("fire_menu", context["chat_id"])},
+            {"command": "ambulance", "description": translate("ambulance_menu", context["chat_id"])},
+            {"command": "police", "description": translate("police_menu", context["chat_id"])},
+            {"command": "rule", "description": translate("rule_menu", context["chat_id"])},
             {"command": "language", "description": translate("language_command", context["chat_id"])},
             {"command": "share_contact", "description": translate("share_contact_command", context["chat_id"])},
             {"command": "help", "description": translate("help_command", context["chat_id"])},
@@ -272,6 +281,20 @@ class TelegramWebhookView(View):
             f"https://api.telegram.org/bot{settings.TELEGRAM_BOT_TOKEN}/sendMessage",
             json=payload
         )
+
+    @staticmethod
+    def get_file_path(file_id):
+        url = f"https://api.telegram.org/bot{settings.TELEGRAM_BOT_TOKEN}/getFile?file_id={file_id}"
+        resp = requests.get(url).json()
+        return resp.get("result", {}).get("file_path")
+
+    @staticmethod
+    def download_telegram_file(file_path):
+        file_url = f"https://api.telegram.org/file/bot{settings.TELEGRAM_BOT_TOKEN}/{file_path}"
+        response = requests.get(file_url)
+        if response.status_code == 200:
+            return response.content
+        return None
 
     # @staticmethod
     # def create_mini_app_button(context):

@@ -9,6 +9,10 @@ translations = {
     "language_command": "Change language",
     "share_contact_command": "Share contact information",
     "start_command": "Start the bot",
+    "fire_menu": "Report to Fire service",
+    "police_menu": "Report to Police service",
+    "ambulance_menu": "Report to Ambulance service",
+    "rule_menu": "Go to see Policy",
     "amg_command": """
 Emergency Assistant Bot is designed to help you report real emergencies such as:
 
@@ -37,7 +41,23 @@ Press "Inactivate" to return to Testing Mode
 
 ❗ Please be responsible. Misuse of this system in Serious Mode may result in penalties.
 """,
-    "buttons_message": "Emergency Features",
+    "inactive_buttons_message": """
+You are now in practice mode.
+
+🛠️ You can safely test all features of the system.
+📵 No real reports will be sent to emergency services.
+
+⚠️ Remember to Activate Serious Mode when you are in a real emergency.
+""",
+    "active_buttons_message": """
+You are now in REAL emergency mode.
+
+☎️ All reports you send WILL be forwarded to emergency services.
+❗️ Do NOT use this mode for testing or jokes.
+
+🆘 Misuse may result in being banned or facing legal action. 
+Please proceed only if you are experiencing a real emergency.
+""",
     "Activate_message": """ 
 🔓 Serious Mode Activated. You are now in REAL emergency mode.
 
@@ -59,4 +79,7 @@ Please proceed only if you are experiencing a real emergency.
     "police_command": """👮 Police emergency, Please send your location so the police can reach you quickly.""",
     "ambulance_command": """🚑 Ambulance emergency, Please send your location so the ambulance can reach you quickly.""",
     "other_command": """🆘 Comming Soon""",
+    "fire_not_work_message": "🔥 Sorry Fire feature may not work for now, please try again",
+    "ambulance_not_work_message": "🚑 Sorry Ambulance feature may not for now, please try again", 
+    "police_not_work_message": "👮 Sorry Police feature may not for now, please try again", 
 }

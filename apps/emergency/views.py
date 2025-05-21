@@ -1,4 +1,5 @@
 import base64
+from tempfile import NamedTemporaryFile
 import uuid
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.base import ContentFile
@@ -14,6 +15,7 @@ from apps.emergency.constants import EMERGENCY_STEP
 from apps.emergency.models import Emergency, EmergencyStep, EmergencyType
 from apps.emergency.serializers import EmergencySerializer, EmergencyStepSerializer
 import logging
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +30,7 @@ class EmergencyView(CoreCreateViewSet):
     model = Emergency
     queryset = Emergency.objects.all()
     serializer_class = EmergencySerializer
+    
 
     def create(self, request, *args, **kwargs):
         chat_id = request.data.get("chat_id")
@@ -35,9 +38,23 @@ class EmergencyView(CoreCreateViewSet):
         longitude = request.data.get("longitude")
         latitude = request.data.get("latitude")
         files = request.FILES.get("files")
+        file_path = request.data.get("file_path")
         text = request.data.get("text")
         is_completed = False
         is_checked = False
+
+        if not files:
+            print("Not file condition")
+            from apps.telegram_bot.views import TelegramWebhookView
+            photo_bytes = TelegramWebhookView.download_telegram_file(file_path)
+
+            if photo_bytes:
+                temp_file = NamedTemporaryFile(delete=True, suffix=".jpg")
+                temp_file.write(photo_bytes)
+                temp_file.flush()
+                temp_file.seek(0)
+
+                files = SimpleUploadedFile("photo.jpg", photo_bytes, content_type="image/jpeg")
 
 
         user_profile = self.get_user_profile(chat_id)
@@ -62,6 +79,7 @@ class EmergencyView(CoreCreateViewSet):
 
                         active_instance.longitude = longitude
                         active_instance.latitude = latitude
+                        
 
                     case EMERGENCY_STEP.PHOTO_OR_VIDEO:
                         if not files:
@@ -72,11 +90,10 @@ class EmergencyView(CoreCreateViewSet):
                                 error_code="wrong_photo_or_video",
                             )
 
-                        _, path = self.save_photo_or_video(files, active_instance)
+                        _, path = self.save_image(files, active_instance)
 
                         if path:
-                            print("THis is Path:", path)
-
+                            active_instance.image = path
                     
                     case EMERGENCY_STEP.TEXT:
                         if not text:
@@ -87,7 +104,7 @@ class EmergencyView(CoreCreateViewSet):
                             )
                         
                         active_instance.text = text
-
+                        active_instance.is_completed = True
                     
                     case _:
                         raise exceptions.ValidationError({"error": "Invalid step type"})
@@ -181,6 +198,7 @@ class EmergencyView(CoreCreateViewSet):
 
 
     def get_user_profile(self, chat_id):
+        print("chat_id_2", chat_id)
         user_profile = UserProfile.objects.filter(chat_id=chat_id)
         if not user_profile.exists():
             raise exceptions.ValidationError(
@@ -222,7 +240,7 @@ class EmergencyView(CoreCreateViewSet):
         return on_step
     
 
-    def save_photo_or_vido(self, files, active_instance):
+    def save_image(self, files, active_instance):
         custom_path = f"storages/{active_instance.emergency_type.name}/{files.name}"
         saved_path = default_storage.save(custom_path, ContentFile(files.read()))
 
