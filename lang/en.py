@@ -82,4 +82,11 @@ Please proceed only if you are experiencing a real emergency.
     "fire_not_work_message": "🔥 Sorry Fire feature may not work for now, please try again",
     "ambulance_not_work_message": "🚑 Sorry Ambulance feature may not for now, please try again", 
     "police_not_work_message": "👮 Sorry Police feature may not for now, please try again", 
+    "not_live_location": "Please share currency location, not live location",
+    "select_any_command_first": "Please select emergency type first by pressing the buttons or menu.",
+    "send_your_text": "Please describe what happened.",
+    "send_location_first": "Please send your loction first.",
+    "send_your_photo": "Please send photo or video",
+    "send_image_or_video_first": "Please send photos or videos first",
+    "success_submit": "✅ Thank you. Your report has been received. Emergency services are on the way."
 }

@@ -61,4 +61,5 @@ class EmergencySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Emergency
-        fields = "__all__"
+        # fields = "__all__"
+        exclude = ['image']

@@ -1,4 +1,7 @@
 import base64
+from mimetypes import guess_type
+import os
+from pathlib import Path
 from tempfile import NamedTemporaryFile
 import uuid
 from django.contrib.contenttypes.models import ContentType
@@ -38,23 +41,31 @@ class EmergencyView(CoreCreateViewSet):
         longitude = request.data.get("longitude")
         latitude = request.data.get("latitude")
         files = request.FILES.get("files")
-        file_path = request.data.get("file_path")
+        file_path = request.data.get("files_path")
         text = request.data.get("text")
         is_completed = False
         is_checked = False
 
+        print("ChatID", chat_id)
+        print("Text", text)
+
         if not files:
-            print("Not file condition")
+            print("📸 No files received, trying to download from Telegram...")
             from apps.telegram_bot.views import TelegramWebhookView
-            photo_bytes = TelegramWebhookView.download_telegram_file(file_path)
+            file_bytes = TelegramWebhookView.download_telegram_file(file_path)
 
-            if photo_bytes:
-                temp_file = NamedTemporaryFile(delete=True, suffix=".jpg")
-                temp_file.write(photo_bytes)
-                temp_file.flush()
-                temp_file.seek(0)
+            if file_bytes:
+                ext = os.path.splitext(file_path)[1] or ".dat"
+                content_type, _ = guess_type(file_path)
+                if not content_type:
+                    content_type = "application/octet-stream"
 
-                files = SimpleUploadedFile("photo.jpg", photo_bytes, content_type="image/jpeg")
+                file_name = f"telegram_file{ext}"
+
+                files = SimpleUploadedFile(file_name, file_bytes, content_type=content_type)
+                print(f"✅ File received: {file_name} ({content_type})")
+            else:
+                print("❌ Failed to download file bytes.")
 
 
         user_profile = self.get_user_profile(chat_id)
@@ -70,12 +81,12 @@ class EmergencyView(CoreCreateViewSet):
                 match emergency_step_type:
                     case EMERGENCY_STEP.LOCATION:
                         if None in (longitude, latitude):
-                            raise BadRequestException(
-                                message=self.get_message(
-                                    active_instance.emergency_step, emergency_type
-                                ),
-                                error_code="wrong_location",
-                            )
+                            return Response(
+                                    {
+                                        "message": "Wrong location",
+                                        "error_code": "wrong_location"
+                                    }
+                                )
 
                         active_instance.longitude = longitude
                         active_instance.latitude = latitude
@@ -83,12 +94,12 @@ class EmergencyView(CoreCreateViewSet):
 
                     case EMERGENCY_STEP.PHOTO_OR_VIDEO:
                         if not files:
-                            raise BadRequestException(
-                                message=self.get_message(
-                                    active_instance.emergency_step, emergency_type
-                                ),
-                                error_code="wrong_photo_or_video",
-                            )
+                            return Response(
+                                    {
+                                        "message": "Wrong photo or video",
+                                        "error_code": "wrong_photo_or_video"
+                                    }
+                                )
 
                         _, path = self.save_image(files, active_instance)
 
@@ -97,11 +108,10 @@ class EmergencyView(CoreCreateViewSet):
                     
                     case EMERGENCY_STEP.TEXT:
                         if not text:
-                            raise BadRequestException(
-                                message=self.get_message(
-                                    active_instance.emergency_step, emergency_type),
-                                error_code="wrong_text",
-                            )
+                            return Response({
+                                "message": "please send text",
+                                "error": "wrong_text"
+                            })
                         
                         active_instance.text = text
                         active_instance.is_completed = True
@@ -128,9 +138,11 @@ class EmergencyView(CoreCreateViewSet):
                     raise error
 
                 self.update_previous_emergency_inactive(chat_id)
-                raise BadRequestException(
-                    message="Not select Command",
-                    error_code="wrong_step",
+                return Response(
+                    {
+                        "message": "Not select Command",
+                        "error_code": "wrong_step"
+                    }
                 )
         else:
             self.update_previous_emergency_inactive(chat_id)
@@ -198,7 +210,6 @@ class EmergencyView(CoreCreateViewSet):
 
 
     def get_user_profile(self, chat_id):
-        print("chat_id_2", chat_id)
         user_profile = UserProfile.objects.filter(chat_id=chat_id)
         if not user_profile.exists():
             raise exceptions.ValidationError(
@@ -215,9 +226,9 @@ class EmergencyView(CoreCreateViewSet):
             .filter(is_completed=True, is_active=True, is_checked=True)
             .exists()
         ):
-            raise exceptions.ValidationError({"error": "invalid_emergency_type"})
+            return Response({"error": "invalid_emergency_type"})
         elif emergency_type and not emergency_type_instance:
-            raise exceptions.ValidationError({"error": "Invalid_emergency_type"})
+            return Response({"error": "Invalid_emergency_type"})
 
         return emergency_type_instance
     

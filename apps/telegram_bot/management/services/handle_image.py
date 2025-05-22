@@ -1,6 +1,7 @@
 from django.http import HttpRequest
 
 from apps.emergency.views import EmergencyView
+from lang.lang_config import translate
 
 
 def handle_photo_message(update):
@@ -34,4 +35,18 @@ def handle_photo_message(update):
         reponse = view.create(fake_request)
         response_data = reponse.data
         message = response_data.get('message')
-        print("Message:", message)
+        try:
+            if message == "Please send your text":
+                 TelegramWebhookView.send_message(chat_id, text=translate("send_your_text", chat_id))
+                 return
+                
+            elif message == "Not select Command":
+                TelegramWebhookView.send_message(chat_id, text=translate("select_any_command_first", chat_id))
+                return
+            
+            elif message == "Wrong location":
+                TelegramWebhookView.send_message(chat_id, text=translate("send_location_first", chat_id))
+                return
+        
+        except Exception as e:
+            print("Error in Handle Photo:", e)

@@ -25,6 +25,9 @@ from telegram.helpers import escape_markdown
 
 from apps.telegram_bot.management.services.activate_user import activate_function
 from apps.telegram_bot.management.services.handle_image import handle_photo_message
+from apps.telegram_bot.management.services.handle_location import handle_location_message
+from apps.telegram_bot.management.services.handle_text import handle_text_message
+from apps.telegram_bot.management.services.handle_video import handle_video_message
 
 
 class TelegramWebhookView(View):
@@ -110,8 +113,17 @@ class TelegramWebhookView(View):
         }
         if "photo" in message:
             print("Photo detected, handling photo...")
-            # handle_photo_message({"message": message}) 
+            handle_photo_message({"message": message}) 
             return
+        
+        if "location" in message:
+            print("Location detected")
+            handle_location_message({"message": message})
+            return
+        
+        if "video" in message:
+            print("Video recieved")
+            handle_video_message({"message": message})
 
         # Handle commands
         if text.startswith("/"):
@@ -124,6 +136,9 @@ class TelegramWebhookView(View):
         elif "contact" in message:
             contact = message["contact"]
             handle_share_contact(context, contact)
+
+        else:
+            handle_text_message(context, text)
         
     def handle_command(self, context, command):
         print("This is command:",command)
