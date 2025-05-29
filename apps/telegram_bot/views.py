@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import time
 from django.http import HttpResponse, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
@@ -28,6 +29,7 @@ from apps.telegram_bot.management.services.handle_image import handle_photo_mess
 from apps.telegram_bot.management.services.handle_location import handle_location_message
 from apps.telegram_bot.management.services.handle_text import handle_text_message
 from apps.telegram_bot.management.services.handle_video import handle_video_message
+from apps.telegram_bot.management.services.handle_voice import handle_voice_message
 
 
 class TelegramWebhookView(View):
@@ -76,24 +78,31 @@ class TelegramWebhookView(View):
         print("User clicked:", data)
 
         if data == "🔓 Activate":
+            self.delete_message_from_callback(callback_query)
             activate_function(chat_id,data)
 
-        elif data == "🔒 Inactivate":
+        elif data == "🔒 Inactivate":     
+            self.delete_message_from_callback(callback_query)
             activate_function(chat_id,data)
 
         elif data == "fire_help":
+            self.delete_message_from_callback(callback_query)
             fire_command(chat_id)
         
         elif data == "police_help":
+            self.delete_message_from_callback(callback_query)
             police_command(chat_id)
 
         elif data == "ambulance_help":
+            self.delete_message_from_callback(callback_query)
             ambulance_command(chat_id)
 
         elif data == "other_help":
+            self.delete_message_from_callback(callback_query)
             other_command(chat_id)
 
         else:
+            self.delete_message_from_callback(callback_query)
             self.send_message(chat_id, f"Wrong Buttons")
 
     def handle_message(self, message):
@@ -101,6 +110,8 @@ class TelegramWebhookView(View):
         text = message.get("text", "")
         user_id = user.get('id')
         user_profile = self.get_user_profile(user_id)
+        message_id = message.get("message_id")
+
         print("Last Name From Handle:",user.get("last_name", ""))
         context = {
             "user_id": user.get('id'),
@@ -109,7 +120,8 @@ class TelegramWebhookView(View):
             "first_name": user.get("first_name", ""),
             "last_name": user.get("last_name", ""),
             "fullname": f"{user.get('first_name', '')} {user.get('last_name', '')}",
-            "photo_url": user_profile
+            "photo_url": user_profile,
+            "message_id": message_id,
         }
         if "photo" in message:
             print("Photo detected, handling photo...")
@@ -124,6 +136,10 @@ class TelegramWebhookView(View):
         if "video" in message:
             print("Video recieved")
             handle_video_message({"message": message})
+
+        if "voice" in message:
+            print("voice recieved")
+            handle_voice_message({"message": message})
 
         # Handle commands
         if text.startswith("/"):
@@ -167,6 +183,7 @@ class TelegramWebhookView(View):
             amg_command(context) 
 
         elif command == "/rule":
+            # TelegramWebhookView.delete_message_from_callback(call_back)
             amg_command(context)
 
         else:
@@ -186,6 +203,16 @@ class TelegramWebhookView(View):
             payload["reply_markup"] = reply_markup
 
         requests.post(url, json=payload)
+
+    @staticmethod
+    def delete_message(chat_id, message_id):
+        import requests
+        url = f"https://api.telegram.org/bot{settings.TELEGRAM_BOT_TOKEN}/deleteMessage"
+        payload = {
+            "chat_id": chat_id,
+            "message_id": message_id
+        }
+        return requests.post(url, json=payload)
 
 
     @staticmethod
@@ -233,10 +260,8 @@ class TelegramWebhookView(View):
 
     @staticmethod
     def send_keyboard(chat_id, text, buttons):
-        """Sends message with keyboard"""
         keyboard = TelegramWebhookView.create_keyboard(buttons)
         payload = {"chat_id": chat_id, "text": text, "reply_markup": keyboard}
-        # Implement your actual message sending logic here
         return requests.post(
             f"https://api.telegram.org/bot{settings.TELEGRAM_BOT_TOKEN}/sendMessage",
             json=payload,
@@ -296,6 +321,20 @@ class TelegramWebhookView(View):
             f"https://api.telegram.org/bot{settings.TELEGRAM_BOT_TOKEN}/sendMessage",
             json=payload
         )
+    
+    @staticmethod
+    def delete_message_from_callback(callback_query):
+        chat_id = callback_query["message"]["chat"]["id"]
+        message_id = callback_query["message"]["message_id"]
+
+        requests.post(
+            f"https://api.telegram.org/bot{settings.TELEGRAM_BOT_TOKEN}/deleteMessage",
+            json={
+                "chat_id": chat_id,
+                "message_id": message_id
+            }
+        )
+
 
     @staticmethod
     def get_file_path(file_id):

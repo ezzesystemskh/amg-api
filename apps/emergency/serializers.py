@@ -62,4 +62,4 @@ class EmergencySerializer(serializers.ModelSerializer):
     class Meta:
         model = Emergency
         # fields = "__all__"
-        exclude = ['image']
+        exclude = ['image', 'voice']

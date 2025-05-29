@@ -14,7 +14,7 @@ EMERGENCY_TYPE = (
 EMERGENCY_STEP = (
     ("location", "Location"),
     ("photo_or_video", "Photo_OR_Video"),
-    ("text", "Text"),
+    ("text_or_voice", "Text_Or_Voice"),
 )
 
 class EmergencyType(AbstractModel):
@@ -65,6 +65,7 @@ class Emergency(AbstractModel):
         blank=True
     )
     image = models.ImageField(upload_to="emergency/", blank=True, null=True)
+    voice = models.FileField(upload_to="emergency/", blank=True, null=True)
     is_completed = models.BooleanField(default=False)
     emergency_step = models.ForeignKey(
         EmergencyStep,

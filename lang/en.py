@@ -16,64 +16,27 @@ translations = {
     "amg_command": """
 Emergency Assistant Bot is designed to help you report real emergencies such as:
 
-🚓 Police
-🚑 Ambulance
-🔥 Fire Services
-🆘 Other Emergency
-
-⚠️ Please read carefully before using.
+🚓 Police   🚑 Ambulance    🔥 Fire Services    💧 Water Service    ⚡ EDC    🚧 Road    🆘 Other Emergency
 
 🔄 Modes of Operation
 
-🛠 Testing Mode (Default)
-You can explore and test all features.
-No real alerts will be sent.
-Safe for learning how the system works.
+🛠 Practice Action (Default)
+You can test all features without sending alerts to emergency services.
   
-🚨 Serious Mode
-All actions will be treated as real emergencies.
-Reports are forwarded directly to emergency responders.
-Do NOT misuse this mode.
-  
-🔘 Activate / Inactivate
-Press "Activate" to enter Serious Mode
-Press "Inactivate" to return to Testing Mode
-
-❗ Please be responsible. Misuse of this system in Serious Mode may result in penalties.
+🚨 Serious Action
+All actions are real emergencies and sent to emergency services.
 """,
     "inactive_buttons_message": """
-You are now in practice mode.
-
-🛠️ You can safely test all features of the system.
-📵 No real reports will be sent to emergency services.
-
-⚠️ Remember to Activate Serious Mode when you are in a real emergency.
+You are now in practice action.
 """,
     "active_buttons_message": """
-You are now in REAL emergency mode.
-
-☎️ All reports you send WILL be forwarded to emergency services.
-❗️ Do NOT use this mode for testing or jokes.
-
-🆘 Misuse may result in being banned or facing legal action. 
-Please proceed only if you are experiencing a real emergency.
+You are now in REAL emergency action.
 """,
     "Activate_message": """ 
-🔓 Serious Mode Activated. You are now in REAL emergency mode.
-
-☎️ All reports you send WILL be forwarded to emergency services.
-❗ Do NOT use this mode for testing or jokes.
-
-🆘 Misuse may result in being banned or facing legal action. 
-Please proceed only if you are experiencing a real emergency.
+🔓 You are now in REAL emergency action.
 """,
     "Inactivate_message": """
-🔒 Testing Mode Activated. You are now in practice mode.
-
-🛠️ You can safely test all features of the system.
-📵 No real reports will be sent to emergency services.
-
-⚠️ Remember to Activate Serious Mode when you are in a real emergency.
+🔒 You are now in REAL emergency action.
 """,
     "fire_command": """🔥 Fire emergency, Please send your location so the fire team can reach you quickly.""",
     "police_command": """👮 Police emergency, Please send your location so the police can reach you quickly.""",

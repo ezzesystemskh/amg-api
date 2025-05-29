@@ -10,4 +10,4 @@ class EmergencyType:
 class EMERGENCY_STEP:
     LOCATION = "location"
     PHOTO_OR_VIDEO = "photo_or_video"
-    TEXT = "text"
+    TEXT_OR_VOICE = "text_or_voice"

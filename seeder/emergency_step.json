@@ -30,7 +30,7 @@
             "name": "Please send your text",
             "step_num": 3,
             "is_completed": true,
-            "step_type": "text",
+            "step_type": "text_or_voice",
             "is_default": false,
             "emergency_type": 1
         }
@@ -66,7 +66,7 @@
             "name": "Please send your text",
             "step_num": 3,
             "is_completed": true,
-            "step_type": "text",
+            "step_type": "text_or_voice",
             "is_default": false,
             "emergency_type": 2
         }
@@ -102,7 +102,7 @@
             "name": "Please send your text",
             "step_num": 3,
             "is_completed": true,
-            "step_type": "text",
+            "step_type": "text_or_voice",
             "is_default": false,
             "emergency_type": 3
         }

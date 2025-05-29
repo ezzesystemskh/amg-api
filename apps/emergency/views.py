@@ -43,14 +43,13 @@ class EmergencyView(CoreCreateViewSet):
         files = request.FILES.get("files")
         file_path = request.data.get("files_path")
         text = request.data.get("text")
+        voice = request.FILES.get("voice")
+        voice_path = request.data.get("voice_path")
         is_completed = False
         is_checked = False
 
-        print("ChatID", chat_id)
-        print("Text", text)
-
         if not files:
-            print("📸 No files received, trying to download from Telegram...")
+            # print("📸 No files received, trying to download from Telegram...")
             from apps.telegram_bot.views import TelegramWebhookView
             file_bytes = TelegramWebhookView.download_telegram_file(file_path)
 
@@ -63,10 +62,29 @@ class EmergencyView(CoreCreateViewSet):
                 file_name = f"telegram_file{ext}"
 
                 files = SimpleUploadedFile(file_name, file_bytes, content_type=content_type)
+                # print(f"✅ File received: {file_name} ({content_type})")
+            else:
+                # print("❌ Failed to download file bytes.")
+                pass
+
+
+        if not voice:
+            print("📸 No files received, trying to download from Telegram...")
+            from apps.telegram_bot.views import TelegramWebhookView
+            voice_bytes = TelegramWebhookView.download_telegram_file(voice_path)
+
+            if voice_bytes:
+                ext = os.path.splitext(voice_path)[1] or ".dat"
+                content_type, _ = guess_type(voice_path)
+                if not content_type:
+                    content_type = "application/octet-stream"
+
+                file_name = f"telegram_file{ext}"
+
+                voice = SimpleUploadedFile(file_name, voice_bytes, content_type=content_type)
                 print(f"✅ File received: {file_name} ({content_type})")
             else:
                 print("❌ Failed to download file bytes.")
-
 
         user_profile = self.get_user_profile(chat_id)
         emergency_type_instance = self.get_emergency_type_instance(emergency_type, user_profile)
@@ -106,13 +124,19 @@ class EmergencyView(CoreCreateViewSet):
                         if path:
                             active_instance.image = path
                     
-                    case EMERGENCY_STEP.TEXT:
-                        if not text:
+                    case EMERGENCY_STEP.TEXT_OR_VOICE:
+                        print("=============================")
+                        if not text and not voice:
                             return Response({
                                 "message": "please send text",
                                 "error": "wrong_text"
                             })
                         
+                        if voice:
+                            _, path = self.save_image(voice, active_instance)
+
+                            if path:
+                                active_instance.voice = path
                         active_instance.text = text
                         active_instance.is_completed = True
                     
