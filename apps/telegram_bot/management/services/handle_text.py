@@ -26,7 +26,7 @@ def handle_text_message(context, text):
         response_data = response.data
         message = response_data.get("message", "")
         is_completed = response_data.get("is_completed", "")
-        print("message:", message)
+        print("message:", response_data)
         user = user_mode(chat_id)
         
         if is_completed == True:

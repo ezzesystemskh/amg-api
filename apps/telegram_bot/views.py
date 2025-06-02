@@ -136,10 +136,13 @@ class TelegramWebhookView(View):
         if "video" in message:
             print("Video recieved")
             handle_video_message({"message": message})
+            return
 
         if "voice" in message:
             print("voice recieved")
+            print("caleddddddddd 111111")
             handle_voice_message({"message": message})
+            return
 
         # Handle commands
         if text.startswith("/"):
@@ -154,6 +157,7 @@ class TelegramWebhookView(View):
             handle_share_contact(context, contact)
 
         else:
+            print("caleddd 22222222222")
             handle_text_message(context, text)
         
     def handle_command(self, context, command):

@@ -69,7 +69,6 @@ class EmergencyView(CoreCreateViewSet):
 
 
         if not voice:
-            print("📸 No files received, trying to download from Telegram...")
             from apps.telegram_bot.views import TelegramWebhookView
             voice_bytes = TelegramWebhookView.download_telegram_file(voice_path)
 
@@ -82,9 +81,8 @@ class EmergencyView(CoreCreateViewSet):
                 file_name = f"telegram_file{ext}"
 
                 voice = SimpleUploadedFile(file_name, voice_bytes, content_type=content_type)
-                print(f"✅ File received: {file_name} ({content_type})")
             else:
-                print("❌ Failed to download file bytes.")
+                pass
 
         user_profile = self.get_user_profile(chat_id)
         emergency_type_instance = self.get_emergency_type_instance(emergency_type, user_profile)
@@ -123,9 +121,9 @@ class EmergencyView(CoreCreateViewSet):
 
                         if path:
                             active_instance.image = path
+                        
                     
                     case EMERGENCY_STEP.TEXT_OR_VOICE:
-                        print("=============================")
                         if not text and not voice:
                             return Response({
                                 "message": "please send text",
@@ -136,7 +134,10 @@ class EmergencyView(CoreCreateViewSet):
                             _, path = self.save_image(voice, active_instance)
 
                             if path:
+                                text = "Voice"
                                 active_instance.voice = path
+                                
+                                
                         active_instance.text = text
                         active_instance.is_completed = True
                     
@@ -147,6 +148,7 @@ class EmergencyView(CoreCreateViewSet):
 
                 if not is_completed:
                     active_instance.emergency_step = on_step
+
                 else:
                     is_checked = True
                     active_instance.is_checked = is_checked

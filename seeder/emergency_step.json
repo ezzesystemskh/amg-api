@@ -91,7 +91,7 @@
             "step_num": 2,
             "is_completed": false,
             "step_type": "photo_or_video",
-            "is_default": false,
+            "is_default": true,
             "emergency_type": 3
         }
     },
