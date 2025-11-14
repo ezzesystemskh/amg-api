@@ -36,7 +36,7 @@ You are now in REAL emergency action.
 🔓 You are now in REAL emergency action.
 """,
     "Inactivate_message": """
-🔒 You are now in REAL emergency action.
+🔒 You are now in Practice emergency action.
 """,
     "fire_command": """🔥 Fire emergency, Please send your location so the fire team can reach you quickly.""",
     "police_command": """👮 Police emergency, Please send your location so the police can reach you quickly.""",
